@@ -5,6 +5,7 @@ public class Missile : MonoBehaviour
 {
     [SerializeField] private float speed = 1f;
     private GameObject _player = null;
+    private float _healthPlayer = 110f;
     
     private void Start() 
     {
@@ -15,6 +16,8 @@ public class Missile : MonoBehaviour
         else{
             Debug.Log("Se encontró al jugador");
         }
+
+        _healthPlayer = GameManager.Instance.healthPlayer;
     }
 
     private void Update() 
@@ -34,8 +37,10 @@ public class Missile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")){
-            Debug.Log("Entró");
-            print("Prueba 2");
+            GameManager.Instance.healthPlayer -= 10f;
+            print(GameManager.Instance.healthPlayer);
+            //Debug.Log("Entró");
+            //print("Prueba 2");
             AutoDestroy();
         }
     }
