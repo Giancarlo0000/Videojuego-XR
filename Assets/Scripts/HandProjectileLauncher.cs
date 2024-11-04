@@ -1,7 +1,8 @@
 using UnityEngine;
 public class HandProjectileLauncher : MonoBehaviour
 {
-    [SerializeField] private GameObject EnergyBall;
+    //[SerializeField] private GameObject EnergyBall;
+    [SerializeField] private string EnergyBall = "EnergyBall";
     [SerializeField] private Transform SpawnPointRightHand;
     [SerializeField] private Transform SpawnPointLeftHand;
 
@@ -35,15 +36,19 @@ public class HandProjectileLauncher : MonoBehaviour
 
     private void Shoot(Transform spawnPoint)
     {
-        GameObject projectile = Instantiate(EnergyBall, spawnPoint.position, Quaternion.identity);
+        //GameObject projectile = Instantiate(EnergyBall, spawnPoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPooling.Instance.SpawnFromPool(EnergyBall, spawnPoint.position, Quaternion.identity);
 
-        Vector3 direction = spawnPoint.forward;
-
-        Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
-
-        if (rigidbody != null)
+        if (projectile != null)
         {
-            rigidbody.velocity = direction * 10f;
-        }
+            Vector3 direction = spawnPoint.forward;
+
+            Rigidbody rigidbody = projectile.GetComponent<Rigidbody>();
+
+            if (rigidbody != null)
+            {
+                rigidbody.velocity = direction * 10f;
+            }
+        } 
     }
 }

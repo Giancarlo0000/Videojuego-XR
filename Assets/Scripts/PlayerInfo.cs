@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
 {
-    private float healthPlayer = 110f;
-    [SerializeField] TextMeshProUGUI hpPlayerUI = null;
-    [SerializeField] Image BlackScreen = null;
+    [SerializeField] private float healthPlayer = 110f;
+    [SerializeField] private TextMeshProUGUI hpPlayerUI = null;
+    [SerializeField] private Image BlackScreen = null;
     
     private void Awake() {
         hpPlayerUI = hpPlayerUI.GetComponent<TextMeshProUGUI>();
@@ -22,12 +22,13 @@ public class PlayerInfo : MonoBehaviour
     }
 
     private void Update(){
-        hpPlayerUI.text = "Life:  " + GameManager.Instance.healthPlayer;
+        hpPlayerUI.text = GameManager.Instance.healthPlayer + "%";
 
         if (GameManager.Instance.healthPlayer <= 0){
             hpPlayerUI.text = "Derrota";
             DestroyEnemies();
-            StartCoroutine(ReloadScene(5f));
+            //StartCoroutine(ReloadScene(5f));
+            StartCoroutine(BackToMenu(5f));
         }
     }
 
@@ -53,6 +54,13 @@ public class PlayerInfo : MonoBehaviour
         yield return new WaitForSeconds(delay);
         //GameManager.Instance.healthPlayer = 100f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+private IEnumerator BackToMenu(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        //GameManager.Instance.healthPlayer = 100f;
+        SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator FadeBlackScreen()

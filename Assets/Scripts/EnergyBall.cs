@@ -2,27 +2,45 @@ using UnityEngine;
 
 public class EnergyBall : MonoBehaviour
 {
-    [SerializeField] private float lifeTime = 10f;
+    [SerializeField] private float lifeTime = 2f;
+    [SerializeField] private float damage = 5f;
     
-    private void Start()
+    private WinCondition _winCondition;
+
+    private void Awake(){
+        _winCondition = FindObjectOfType<WinCondition>();
+    }
+
+    private void OnEnable()
     {
-        Destroy(gameObject, lifeTime);
+        Invoke(nameof(Deactivate), lifeTime);
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(Deactivate));
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            print(other.gameObject);            
-            Destroy(other.gameObject);            
-            Destroy(gameObject);
-
+            Deactivate();
+            Dron dron = other.GetComponent<Dron>();
+            dron.TakeDamage(damage);
+            if (dron.Life <= 0){
+                _winCondition.EnemyDestroyed();
+            }           
         }
         if (other.CompareTag("EnemyProjectile"))
         {
-            print(other.gameObject);
-            Destroy(other.gameObject);
-            Destroy(gameObject);
+            other.gameObject.SetActive(false);
+            Deactivate();
         }
+    }
+
+    private void Deactivate()
+    {
+        gameObject.SetActive(false);
     }
 }
