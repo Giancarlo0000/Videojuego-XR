@@ -59,7 +59,7 @@ public class ObjectPooling : MonoBehaviour
 
         if (objectToSpawn == null)
         {
-            Debug.Log("No quedan objetos " + tag);
+            Debug.Log($"No hay más objetos disponibles del tipo {tag}");
             return null;
         }
 

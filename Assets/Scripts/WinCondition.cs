@@ -11,6 +11,7 @@ public class WinCondition : MonoBehaviour
     [SerializeField] private bool IsTimeLevel = false;
     [SerializeField] private GameObject TimeIcon = null;
     [SerializeField] private GameObject EnemiesIcon = null;
+    [SerializeField] private float InitialHealth = 100f;
     private int _remainingEnemies = 0;
     private float _remainingTime = 0f;
 
@@ -21,6 +22,8 @@ public class WinCondition : MonoBehaviour
         {
             _remainingTime = TimeLimit;
         }
+
+        GameManager.Instance.healthPlayer = InitialHealth;
     }
 
     private void Update()
@@ -33,7 +36,7 @@ public class WinCondition : MonoBehaviour
 
             if (_remainingTime <= 0)
             {
-                RemainingEnemiesUI.text = "Victoria: Tiempo completado.";
+                RemainingEnemiesUI.text = "Victoria";
                 StartCoroutine(GoToMenuAfterDelay(3f));
             }
         }
@@ -46,7 +49,7 @@ public class WinCondition : MonoBehaviour
             }
             else
             {
-                RemainingEnemiesUI.text = "Victoria: Todos los enemigos destruidos.";
+                RemainingEnemiesUI.text = "Victoria";
                 StartCoroutine(GoToMenuAfterDelay(3f));
             }
         }
@@ -65,14 +68,23 @@ public class WinCondition : MonoBehaviour
         }
     }
 
-    /*private IEnumerator ReloadScene(float delay)
+    private void DestroyAllEnemies()
     {
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }*/
+        string[] tagsToDestroy = { "Spawner", "Enemy", "EnemyProjectile" };
+        foreach (string tag in tagsToDestroy)
+        {
+            GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+
+            foreach (GameObject obj in objects)
+            {
+                Destroy(obj);
+            }
+        }
+    }
 
     private IEnumerator GoToMenuAfterDelay(float delay)
     {
+        DestroyAllEnemies();
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene("MainMenu");
     }

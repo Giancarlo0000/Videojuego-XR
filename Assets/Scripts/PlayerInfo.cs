@@ -6,14 +6,11 @@ using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
 {
-    [SerializeField] private float healthPlayer = 110f;
     [SerializeField] private TextMeshProUGUI hpPlayerUI = null;
     [SerializeField] private Image BlackScreen = null;
     
     private void Awake() {
         hpPlayerUI = hpPlayerUI.GetComponent<TextMeshProUGUI>();
-        //healthPlayer = GameManager.Instance.healthPlayer;
-        GameManager.Instance.healthPlayer = healthPlayer;
     }
 
     private void Start()
@@ -25,9 +22,8 @@ public class PlayerInfo : MonoBehaviour
         hpPlayerUI.text = GameManager.Instance.healthPlayer + "%";
 
         if (GameManager.Instance.healthPlayer <= 0){
-            hpPlayerUI.text = "Derrota";
+            hpPlayerUI.text = "Has sido derrotado";
             DestroyEnemies();
-            //StartCoroutine(ReloadScene(5f));
             StartCoroutine(BackToMenu(5f));
         }
     }
@@ -52,14 +48,12 @@ public class PlayerInfo : MonoBehaviour
     private IEnumerator ReloadScene(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //GameManager.Instance.healthPlayer = 100f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 private IEnumerator BackToMenu(float delay)
     {
         yield return new WaitForSeconds(delay);
-        //GameManager.Instance.healthPlayer = 100f;
         SceneManager.LoadScene("MainMenu");
     }
 

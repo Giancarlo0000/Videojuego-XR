@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,14 @@ public class GameManager : MonoBehaviour
         }
         else{
             Destroy(gameObject);
+        }
+    }
+
+    private void Update()
+    {
+        if (OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.RTouch))
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 }

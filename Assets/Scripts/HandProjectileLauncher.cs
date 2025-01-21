@@ -1,19 +1,26 @@
 using UnityEngine;
 public class HandProjectileLauncher : MonoBehaviour
 {
-    //[SerializeField] private GameObject EnergyBall;
-    [SerializeField] private string EnergyBall = "EnergyBall";
+    [SerializeField] private string EnergyBallTag = "EnergyBall";
     [SerializeField] private Transform SpawnPointRightHand;
+    [SerializeField] private AudioSource AudioRightHand = null;
     [SerializeField] private Transform SpawnPointLeftHand;
+    [SerializeField] private AudioSource AudioLeftHand = null;
+    [SerializeField] private GameObject WatchUI;
 
     private bool _isRightTriggerPressed = false;
     private bool _isLeftTriggerPressed = false;
     private void Update()
     {
+        if (OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.RTouch))
+        {
+            WatchUI.SetActive(!WatchUI.activeSelf);
+        }
+
         float rightTriggerValue = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, OVRInput.Controller.RTouch);
         if (rightTriggerValue > 0.1f && !_isRightTriggerPressed)
         {
-            Shoot(SpawnPointRightHand);
+            Shoot(SpawnPointRightHand, AudioRightHand);
             _isRightTriggerPressed = true;
         }
         else if(rightTriggerValue <= 0.1f)
@@ -25,7 +32,7 @@ public class HandProjectileLauncher : MonoBehaviour
 
         if (leftTriggerValue > 0.1f && !_isLeftTriggerPressed)
         {
-            Shoot(SpawnPointLeftHand);
+            Shoot(SpawnPointLeftHand, AudioLeftHand);
             _isLeftTriggerPressed = true;
         }
         else if(leftTriggerValue <= 0.1f)
@@ -34,10 +41,9 @@ public class HandProjectileLauncher : MonoBehaviour
         }
     }
 
-    private void Shoot(Transform spawnPoint)
+    private void Shoot(Transform spawnPoint, AudioSource audioSource)
     {
-        //GameObject projectile = Instantiate(EnergyBall, spawnPoint.position, Quaternion.identity);
-        GameObject projectile = ObjectPooling.Instance.SpawnFromPool(EnergyBall, spawnPoint.position, Quaternion.identity);
+        GameObject projectile = ObjectPooling.Instance.SpawnFromPool(EnergyBallTag, spawnPoint.position, Quaternion.identity);
 
         if (projectile != null)
         {
@@ -48,6 +54,11 @@ public class HandProjectileLauncher : MonoBehaviour
             if (rigidbody != null)
             {
                 rigidbody.velocity = direction * 10f;
+            }
+
+            if (audioSource != null)
+            {
+                audioSource.Play();
             }
         } 
     }
